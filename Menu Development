@@ -1,0 +1,102 @@
+var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+
+    var options;
+    var clickSfx;
+    var play;
+    var menuMusic;
+    var musicButton;
+
+function preload() {
+
+    game.load.image('play', 'assets/play.png');
+    game.load.image('options', 'assets/options.png');
+    game.load.image('musicButton', 'assets/musicButton.png');
+    game.load.audio('click', 'assets/click.mp3');
+    game.load.audio('menuMusic', 'assets/menumusic.mp3');
+
+}
+
+function create() {
+
+    game.stage.backgroundColor = '#182d3b';
+
+    menuMusic = game.add.audio('menuMusic');
+    clickSfx = game.add.audio('click');
+
+
+    play = game.add.sprite(game.world.centerX, game.world.centerY + 50, 'play');
+    options = game.add.sprite(game.world.centerX, game.world.centerY + 120, 'options');
+    
+
+    play.anchor.set(0.5);
+    options.anchor.set(0.5);
+
+
+    play.inputEnabled = true;
+    options.inputEnabled = true;
+
+    play.input.useHandCursor = true;
+    options.input.useHandCursor = true;
+
+    musicButton = game.add.sprite(game.world.centerX + 300, game.world.centerY + 250, 'musicButton');
+    musicButton.anchor.set(0.5);
+    musicButton.inputEnabled = true;
+    musicButton.inputEnabled = true;
+    musicButton.events.onInputDown.add(onMusicButton, this);
+
+
+    
+    menuMusic.play();
+    menuMusic.volume = 0.1;
+
+}
+
+function update() {
+
+    play.events.onInputDown.add(onPlay, this);
+    options.events.onInputDown.add(onOptions, this);
+
+    if (play.input.pointerOver()) {
+        play.alpha = 3; 
+    }
+    else {
+        play.alpha = 0.5;
+    }
+
+    if (options.input.pointerOver()) {
+        options.alpha = 3;
+    }
+    else {
+        options.alpha = 0.5;
+    }
+
+    if (musicButton.input.pointerOver()) {
+        musicButton.alpha = 3;
+    }
+    else {
+        musicButton.alpha = 0.5;
+    }
+    
+
+}
+
+function onPlay(target, pointer) {
+    play.scale.set(0.9, 0.9);
+    game.stage.backgroundColor = '#4286f4';
+    play.scale.set(1, 1);
+    clickSfx.play();
+}
+function onOptions(target, pointer) {
+    clickSfx.play();
+    game.stage.backgroundColor = '#f4be41';
+}
+function onMusicButton(target, pointer) {
+    game.stage.backgroundColor = '#71f442';
+    clickSfx.play();
+    if (menuMusic.volume === 0) {
+        menuMusic.volume = 0.1;
+    }
+    else if (menuMusic.volume === 0.1) {
+        menuMusic.volume = 0;
+    }
+}
